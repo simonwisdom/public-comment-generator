@@ -6,15 +6,11 @@ import('node-fetch').then(mod => {
   fetch = mod.default;
 }).catch(err => console.error('Failed to load node-fetch:', err));
 
-const express = require('express');
 const PDFDocument = require('pdfkit');
-const app = express();
 
-app.use(express.json());
-
-app.post('/generate-pdf', async (req, res) => {
-  // Extract data from the incoming JSON request
-  const { title, summary, group, interest } = req.body;
+module.exports = async (req, res) => {
+  if (req.method === 'POST') {
+    const { title, summary, group, interest } = req.body;
 
   // Construct a custom prompt and incorporate all relevant details
   const customPrompt = `Please generate a detailed and constructive comment based on the following inputs. Here are two examples of professional-sounding comments:
@@ -153,12 +149,7 @@ app.post('/generate-pdf', async (req, res) => {
     console.error('Error handling request:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
-});
-
-module.exports = app;
+} else {
+  res.status(405).json({ error: 'Method Not Allowed' });
+}
+};

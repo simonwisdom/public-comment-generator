@@ -66,18 +66,24 @@ const App = () => {
     };
     console.log('Payload to send:', payload); // You can replace this with a POST request
 
-    // Example POST request (you need to define the URL)
-    // fetch('YOUR_ENDPOINT_URL', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(payload),
-    // })
-    // .then(response => response.json())
-    // .then(data => console.log('Success:', data))
-    // .catch((error) => console.error('Error:', error));
-  };
+    fetch('https://https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'output.pdf');
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch((error) => console.error('Error:', error));
 
   return (
     <div>
