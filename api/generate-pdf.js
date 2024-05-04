@@ -1,4 +1,5 @@
-require('dotenv').config();
+import 'dotenv/config';
+import PDFDocument from 'pdfkit';
 
 let fetch;
 
@@ -6,9 +7,9 @@ import('node-fetch').then(mod => {
   fetch = mod.default;
 }).catch(err => console.error('Failed to load node-fetch:', err));
 
-const PDFDocument = require('pdfkit');
-
 module.exports = async (req, res) => {
+  // ... rest of the code remains the same
+};
   if (req.method === 'POST') {
     const { title, summary, group, interest } = req.body;
 
