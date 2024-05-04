@@ -1,10 +1,6 @@
+const fetch = require('node-fetch');
 require('dotenv').config();
 
-let fetch;
-
-import('node-fetch').then(mod => {
-  fetch = mod.default;
-}).catch(err => console.error('Failed to load node-fetch:', err));
 
 module.exports = async (req, res) => {
   if (req.method === 'POST') {
