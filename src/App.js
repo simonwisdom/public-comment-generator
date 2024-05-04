@@ -84,6 +84,7 @@ const App = () => {
         link.parentNode.removeChild(link);
       })
       .catch((error) => console.error('Error:', error));
+    };
 
   return (
     <div>
