@@ -8,19 +8,18 @@ export default async (req, res) => {
 
     try {
       const documentUrl = `https://www.federalregister.gov/api/v1/documents/${documentNumber}`;
-
       const documentResponse = await fetch(documentUrl);
-    //   const documentData = await documentResponse.json();
 
       console.log('Response Status:', documentResponse.status);
       console.log('Response Headers:', documentResponse.headers);
-      console.log('Response Body:', await documentResponse.text());
 
+      let documentData;
       if (documentResponse.headers.get('content-type').includes('application/json')) {
-        const documentData = await documentResponse.json();
-        // Process the JSON data
+        documentData = await documentResponse.json();
+        console.log('Response Body:', JSON.stringify(documentData));
       } else {
-        console.log('Unexpected response format:', await documentResponse.text());
+        const responseBody = await documentResponse.text();
+        console.log('Unexpected response format:', responseBody);
         throw new Error('Unexpected response format');
       }
 
@@ -32,7 +31,16 @@ export default async (req, res) => {
         truncatedFullTextXml: truncatedFullTextXml,
       };
 
-      const prompt = `Provide a concise, high-level summary of the key points from the document below...`;
+      const prompt = `Provide a concise, high-level summary of the key points from the document below, as if an experienced policy researcher were briefing a senior staffer. Focus on essential information and context, synthesizing the content to address why this document is important.
+
+      Additionally, identify key stakeholders likely to be affected by or interested in the document's proposals. For each stakeholder, include a sentence describing their potential bias or interest in influencing the document's proposals. Ensure that the stakeholders are relevant to the specific context of the document being summarized.
+      
+      Pick stakeholders that represent diverse interests that ideally do not agree with each other.
+      
+      Prioritize clarity and brevity while ensuring no critical details are omitted. Do not include preamble like 'this is a summary..', jump straight into the summary content.
+      
+      Input:
+      `;
 
       const messages = [
         {

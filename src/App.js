@@ -80,7 +80,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>Enter Document Number</h1>
+      <h1>Enter Document Number (in the form XXXX-XXXXX)</h1>
       <input type="text" value={documentNumber} onChange={handleDocumentNumberChange} />
       <button onClick={handleSummarizeDoc}>Summarize Document</button>
       <h2>Summary</h2>
