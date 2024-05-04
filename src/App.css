@@ -1,69 +1,63 @@
-.App {
-  text-align: center;
+/* Set a basic modern look for the entire document */
+body {
+  background-color: #f4f1ea; /* soft beige background */
+  color: #4a4a4a; /* dark gray text color for better readability */
+  font-family: 'Roboto', sans-serif; /* modern, readable font */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 .container {
-  font-family: 'Arial, sans-serif';
   padding: 20px;
   max-width: 600px;
-  margin: auto;
+  margin: 20px auto;
+  background-color: #fff; /* white background for the form area */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+  border-radius: 8px; /* rounded corners for modern look */
+}
+
+.input, .button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 6px; /* rounded edges for inputs and buttons */
 }
 
 .input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
+  border: 1px solid #ccc; /* light grey border */
+  font-size: 16px; /* larger font size for readability */
 }
 
 .button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
+  background-color: #8b5e3c; /* brown color for buttons */
   color: white;
+  font-weight: 500; /* medium font weight */
   border: none;
   cursor: pointer;
+  transition: background-color 0.3s; /* smooth transition on hover */
+}
+
+.button:hover {
+  background-color: #724c32; /* slightly darker brown on hover */
 }
 
 .button:disabled {
-  background-color: #999;
+  background-color: #ccc; /* grey out button when disabled */
 }
 
 .output {
-  background: #f0f0f0;
+  background: #f0e6d6; /* lighter beige for output fields */
   padding: 10px;
-  borderRadius: 5px;
+  border-radius: 6px; /* rounded edges for output */
+  font-size: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px; /* space between label and input */
+}
+
+h1, h2 {
+  margin-top: 0;
 }

@@ -1,12 +1,6 @@
 import 'dotenv/config';
 import PDFDocument from 'pdfkit';
 
-let fetch;
-
-import('node-fetch').then(mod => {
-  fetch = mod.default;
-}).catch(err => console.error('Failed to load node-fetch:', err));
-
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { title, summary, group, interest } = req.body;
@@ -81,6 +75,7 @@ export default async function handler(req, res) {
   const max_tokens = 1024; // Set the maximum number of tokens to generate
 
   try {
+    const fetch = (await import('node-fetch')).default;
     // Interact with the Anthropic API
     const apiResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
