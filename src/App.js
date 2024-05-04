@@ -26,6 +26,7 @@ const App = () => {
   };
 
   const handleSummarizeDoc = () => {
+    setIsLoading(true);
     fetch('https://public-comment-generator-roan.vercel.app/api/summarize-doc', {
       method: 'POST',
       headers: {
@@ -40,18 +41,21 @@ const App = () => {
         return response.json();
       })
       .then(data => {
-        setTitle(data.title); // Now setting the title
+        setTitle(data.title);
         setSummary(data.summary);
         console.log('Data received:', data);
+        setIsLoading(false);
       })
       .catch(error => {
         console.error('Error:', error);
         setSummary('Error occurred while fetching summary');
-        setTitle(''); // Reset title if there is an error
+        setTitle('');
+        setIsLoading(false);
       });
   };
 
   const handleGeneratePDF = () => {
+    setIsLoading(true);
     const payload = {
       title,
       summary,
@@ -59,7 +63,6 @@ const App = () => {
       interest
     };
     console.log('Payload to send:', payload);
-  
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',
       headers: {
@@ -69,25 +72,36 @@ const App = () => {
     })
       .then(response => response.blob())
       .then(blob => {
-        const url = window.URL.createObjectURL(new Blob([blob]));
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(pdfBlob);
         const iframe = document.createElement('iframe');
         iframe.style.width = '100%';
-        iframe.style.height = '500px'; // Set a fixed height or make it responsive
+        iframe.style.height = '500px';
         iframe.src = url;
+        document.getElementById('pdfViewer').innerHTML = '';
         document.getElementById('pdfViewer').appendChild(iframe);
+        setIsLoading(false);
       })
-      .catch((error) => console.error('Error:', error));
+      .catch((error) => {
+        console.error('Error:', error);
+        setIsLoading(false);
+      });
   };
-  
+
   return (
     <div className="container">
       <h1>Enter Document Number (in the form XXXX-XXXXX)</h1>
       <input className="input" type="text" value={documentNumber} onChange={handleDocumentNumberChange} />
-      <button className="button" onClick={handleSummarizeDoc} disabled={isLoading}>{isLoading ? 'Loading...' : 'Summarize Document'}</button>
+      <button className="button" onClick={handleSummarizeDoc} disabled={isLoading}>
+        {isLoading ? 'Loading...' : 'Summarize Document'}
+      </button>
+
       <h2>Document Title</h2>
       <p className="output">{title}</p>
+
       <h2>Summary</h2>
       <p className="output">{summary}</p>
+
       <h2>Enter Details</h2>
       <label>
         Title:
@@ -95,20 +109,31 @@ const App = () => {
       </label>
       <br />
       <label>
-        Group:
+        What industry/lobby group do you represent?:
         <input className="input" type="text" value={group} onChange={handleGroupChange} />
       </label>
       <br />
       <label>
-        Interest:
+        What is your vested interest in this legislation? How will this affect you?:
         <input className="input" type="text" value={interest} onChange={handleInterestChange} />
       </label>
       <br />
-      <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>{isLoading ? 'Creating PDF...' : 'Generate PDF'}</button>
+      <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>
+        {isLoading ? 'Creating PDF...' : 'Generate PDF'}
+      </button>
+
       <div id="pdfViewer"></div>
+
+      {isLoading && (
+        <div className="modal">
+          <div className="modal-content">
+            <div className="loader"></div>
+            <p>Please wait...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
-  
 };
 
 export default App;
