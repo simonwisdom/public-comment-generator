@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './App.css';
 
 const App = () => {
   const [documentNumber, setDocumentNumber] = useState('');
@@ -6,6 +7,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [group, setGroup] = useState('');
   const [interest, setInterest] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDocumentNumberChange = (event) => {
     setDocumentNumber(event.target.value);
@@ -79,31 +81,31 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Enter Document Number (in the form XXXX-XXXXX)</h1>
-      <input type="text" value={documentNumber} onChange={handleDocumentNumberChange} />
-      <button onClick={handleSummarizeDoc}>Summarize Document</button>
+      <input className="input" type="text" value={documentNumber} onChange={handleDocumentNumberChange} />
+      <button className="button" onClick={handleSummarizeDoc} disabled={isLoading}>{isLoading ? 'Loading...' : 'Summarize Document'}</button>
+      <h2>Document Title</h2>
+      <p className="output">{title}</p>
       <h2>Summary</h2>
-      <p>{summary}</p>
-      <h2>Document Title</h2> {/* Added title display */}
-      <p>{title}</p>
+      <p className="output">{summary}</p>
       <h2>Enter Details</h2>
       <label>
         Title:
-        <input type="text" value={title} onChange={handleTitleChange} />
+        <input className="input" type="text" value={title} onChange={handleTitleChange} />
       </label>
       <br />
       <label>
         Group:
-        <input type="text" value={group} onChange={handleGroupChange} />
+        <input className="input" type="text" value={group} onChange={handleGroupChange} />
       </label>
       <br />
       <label>
         Interest:
-        <input type="text" value={interest} onChange={handleInterestChange} />
+        <input className="input" type="text" value={interest} onChange={handleInterestChange} />
       </label>
       <br />
-      <button onClick={handleGeneratePDF}>Generate PDF</button>
+      <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>{isLoading ? 'Creating PDF...' : 'Generate PDF'}</button>
     </div>
   );
 };

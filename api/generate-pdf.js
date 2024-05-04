@@ -7,7 +7,7 @@ import('node-fetch').then(mod => {
   fetch = mod.default;
 }).catch(err => console.error('Failed to load node-fetch:', err));
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { title, summary, group, interest } = req.body;
 

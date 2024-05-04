@@ -36,3 +36,34 @@
     transform: rotate(360deg);
   }
 }
+.container {
+  font-family: 'Arial, sans-serif';
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button:disabled {
+  background-color: #999;
+}
+
+.output {
+  background: #f0f0f0;
+  padding: 10px;
+  borderRadius: 5px;
+}
