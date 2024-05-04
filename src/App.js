@@ -66,7 +66,7 @@ const App = () => {
     };
     console.log('Payload to send:', payload); // You can replace this with a POST request
 
-    fetch('https://https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
+    fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
