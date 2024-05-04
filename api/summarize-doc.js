@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import fetch from 'node-fetch';
 
 dotenv.config();
 
@@ -8,6 +7,8 @@ export default async (req, res) => {
     const { documentNumber } = req.body;
 
     try {
+      const fetch = (await import('node-fetch')).default;
+
       const documentUrl = `http://api.federalregister.gov/v1/articles/${documentNumber}.json`;
       const documentResponse = await fetch(documentUrl);
       const documentData = await documentResponse.json();
@@ -56,7 +57,6 @@ export default async (req, res) => {
         documentNumber: documentNumber,
         title: documentData.title // Assuming the title field exists in the fetched data
       });
-
     } catch (error) {
       console.error('Error handling request:', error);
       res.status(500).json({ error: 'Internal Server Error' });
