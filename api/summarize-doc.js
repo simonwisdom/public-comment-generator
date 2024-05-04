@@ -50,7 +50,12 @@ export default async (req, res) => {
       const content = await apiResponse.json();
       const summary = content.content[0].text;
 
-      res.status(200).json({ summary });
+      // Return the summary along with the document number and title
+      res.status(200).json({
+        summary,
+        documentNumber: documentNumber,
+        title: documentData.title // Assuming the title field exists in the fetched data
+      });
 
     } catch (error) {
       console.error('Error handling request:', error);
