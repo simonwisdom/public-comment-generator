@@ -35,8 +35,6 @@ module.exports = async (req, res) => {
 
     We appreciate the opportunity to provide comments in response to the Commerce Department's Notice of Proposed Rulemaking on Preventing the Improper Use of CHIPS Act Funding ("Proposed Rule"). While we applaud the passage of the CHIPS Act and the Administration's efforts to ensure CHIPS Act funding does not inadvertently benefit the United States' adversaries or otherwise put our national security at risk, we have serious concerns that the breadth of the restrictions contained in the Proposed Rule—particularly those restricting certain technology licensing agreements—will harm rather than protect U.S. economic and national security interests.
 
-    [Detailed comment content...]
-
     Sincerely,
     Innovation Alliance
     U.S. Startups and Inventors for Jobs (USIJ)
@@ -65,8 +63,6 @@ module.exports = async (req, res) => {
     The Consumer Technology Association (CTA)® appreciates the opportunity to submit comments in response to the National Institute of Standards and Technology's (NIST's) Proposed Rule on Preventing the Improper Use of CHIPS Act Funding.
 
     CTA strongly supports efforts by the Biden-Harris Administration to strengthen supply chain security and resilience, spur innovation, increase competitiveness, de-risk from the People's Republic of China, and ensure long-term U.S. global technology leadership. However, our overarching concern is that the proposed guardrails will unintentionally curtail the production of chips for use in downstream consumer technologies, thereby creating further supply shortages in the future. The Proposed Rule will also prevent recipients and their affiliates from participating in international semiconductor activity and thereby discourage their participation in the program.
-
-    [Detailed comment content...]
 
     Sincerely,
     Consumer Technology Association (CTA)
