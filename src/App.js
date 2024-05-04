@@ -1,70 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import Papa from 'papaparse';
+import React, { useState } from 'react';
 
 const App = () => {
-  const [data, setData] = useState([]);
-  const [selectedTitle, setSelectedTitle] = useState('');
-  const [selectedSummary, setSelectedSummary] = useState('');
-  const [selectedGroups, setSelectedGroups] = useState([]);
-  const [selectedGroupIndex, setSelectedGroupIndex] = useState(-1);
-  const [selectedInterest, setSelectedInterest] = useState('');
+  const [documentNumber, setDocumentNumber] = useState('');
+  const [summary, setSummary] = useState('');
+  const [title, setTitle] = useState('');
+  const [group, setGroup] = useState('');
+  const [interest, setInterest] = useState('');
 
-  useEffect(() => {
-    // Fetch and parse the CSV data
-    fetch('/stakeholders.csv')
-      .then(response => response.text())
-      .then(csvData => {
-        const parsedData = Papa.parse(csvData, { header: true });
-        setData(parsedData.data);
-      });
-  }, []);
+  const handleDocumentNumberChange = (event) => {
+    setDocumentNumber(event.target.value);
+  };
 
   const handleTitleChange = (event) => {
-    const selected = event.target.value;
-    setSelectedTitle(selected);
-    const found = data.find(item => item.title === selected);
-    if (found) {
-      setSelectedSummary(found.summary || 'No summary available');
-      try {
-        const groups = JSON.parse(found.groups.replace(/'/g, '"')) || [];
-        setSelectedGroups(groups);
-        setSelectedInterest('');
-        setSelectedGroupIndex(-1); // Reset group index when title changes
-      } catch {
-        setSelectedGroups([]);
-        setSelectedInterest('');
-        setSelectedGroupIndex(-1);
-      }
-    } else {
-      setSelectedSummary('No summary available');
-      setSelectedGroups([]);
-      setSelectedInterest('');
-      setSelectedGroupIndex(-1);
-    }
+    setTitle(event.target.value);
   };
 
   const handleGroupChange = (event) => {
-    const selected = parseInt(event.target.value, 10);
-    setSelectedGroupIndex(selected);
-    const found = data.find(item => item.title === selectedTitle);
-    if (found && found.interests) {
-      try {
-        const interests = JSON.parse(found.interests.replace(/'/g, '"'));
-        setSelectedInterest(interests[selected] || 'No interest available');
-      } catch {
-        setSelectedInterest('Interest data not properly formatted');
-      }
-    }
+    setGroup(event.target.value);
+  };
+
+  const handleInterestChange = (event) => {
+    setInterest(event.target.value);
+  };
+
+  const handleSummarizeDoc = () => {
+    fetch('https://public-comment-generator-roan.vercel.app/api/summarize-doc', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ documentNumber }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        setSummary(data.summary);
+        console.log('Summary received:', data.summary);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setSummary('Error occurred while fetching summary');
+      });
   };
 
   const handleGeneratePDF = () => {
     const payload = {
-      title: selectedTitle,
-      summary: selectedSummary,
-      group: selectedGroups[selectedGroupIndex],
-      interest: selectedInterest
+      title,
+      summary,
+      group,
+      interest
     };
-    console.log('Payload to send:', payload); // You can replace this with a POST request
+    console.log('Payload to send:', payload);
 
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',
@@ -88,23 +73,27 @@ const App = () => {
 
   return (
     <div>
-      <h1>Select a Title</h1>
-      <select value={selectedTitle} onChange={handleTitleChange}>
-        {data.map((item, index) => (
-          <option key={index} value={item.title}>{item.title}</option>
-        ))}
-      </select>
+      <h1>Enter Document Number</h1>
+      <input type="text" value={documentNumber} onChange={handleDocumentNumberChange} />
+      <button onClick={handleSummarizeDoc}>Summarize Document</button>
       <h2>Summary</h2>
-      <p>{selectedSummary}</p>
-      <h2>Groups</h2>
-      <select value={selectedGroupIndex} onChange={handleGroupChange}>
-        <option value="-1">Select a group</option>
-        {selectedGroups.map((group, index) => (
-          <option key={index} value={index}>{group}</option>
-        ))}
-      </select>
-      <h2>Interest</h2>
-      <p>{selectedInterest}</p>
+      <p>{summary}</p>
+      <h2>Enter Details</h2>
+      <label>
+        Title:
+        <input type="text" value={title} onChange={handleTitleChange} />
+      </label>
+      <br />
+      <label>
+        Group:
+        <input type="text" value={group} onChange={handleGroupChange} />
+      </label>
+      <br />
+      <label>
+        Interest:
+        <input type="text" value={interest} onChange={handleInterestChange} />
+      </label>
+      <br />
       <button onClick={handleGeneratePDF}>Generate PDF</button>
     </div>
   );
