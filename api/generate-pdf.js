@@ -8,8 +8,6 @@ import('node-fetch').then(mod => {
 }).catch(err => console.error('Failed to load node-fetch:', err));
 
 module.exports = async (req, res) => {
-  // ... rest of the code remains the same
-};
   if (req.method === 'POST') {
     const { title, summary, group, interest } = req.body;
 
