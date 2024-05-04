@@ -6,25 +6,18 @@ import('node-fetch').then(mod => {
   fetch = mod.default;
 }).catch(err => console.error('Failed to load node-fetch:', err));
 
-const FederalRegister = require('./federal_register');
-
 module.exports = async (req, res) => {
   if (req.method === 'POST') {
     const { documentNumber } = req.body;
 
     try {
-      // Initialize the FederalRegister client
-      const fr = new FederalRegister();
-
       // Fetch the document by its document number
-      const document = await fr.document_by_id(documentNumber, ['full_text_xml_url']);
+      const documentUrl = `http://api.federalreigster.gov/v1/articles/${documentNumber}.json`;
+      const documentResponse = await fetch(documentUrl);
+      const documentData = await documentResponse.json();
 
-      // Extract the full_text_xml_url from the document
-      const fullTextXmlUrl = document.full_text_xml_url;
-
-      // Fetch the full text content from the URL
-      const fullTextResponse = await fetch(fullTextXmlUrl);
-      const fullTextXml = await fullTextResponse.text();
+      // Extract the full text content from the document data
+      const fullTextXml = documentData.full_text_xml_url;
 
       // Truncate the full text XML to 10,000 characters
       const truncatedFullTextXml = fullTextXml.slice(0, 10000);
@@ -35,22 +28,26 @@ module.exports = async (req, res) => {
         truncatedFullTextXml: truncatedFullTextXml,
         // Add other relevant fields from the document as needed
       };
-      
+
       const prompt = `Provide a concise, high-level summary of the key points from the document below, as if an experienced policy researcher were briefing a senior staffer. Focus on essential information and context, synthesizing the content to address why this document is important.
-      
-      Additionally, identify key stakeholders likely to be affected by or interested in the document's proposals. For each stakeholder, include a sentence describing their potential bias or interest in influencing the document's proposals. Ensure that the stakeholders are relevant to the specific context of the document being summarized.
-      Pick stakeholders that represent diverse interests that ideally do not agree with each other.
-      
-      Prioritize clarity and brevity while ensuring no critical details are omitted.
-      
-      Input:
-      """`;
+
+Additionally, identify key stakeholders likely to be affected by or interested in the document's proposals. For each stakeholder, include a sentence describing their potential bias or interest in influencing the document's proposals. Ensure that the stakeholders are relevant to the specific context of the document being summarized.
+
+Pick stakeholders that represent diverse interests that ideally do not agree with each other.
+
+Prioritize clarity and brevity while ensuring no critical details are omitted.
+
+Input:
+
+"""`;
 
       // Create a message array with the correct format
-      const messages = [{
-        role: "user",
-        content: prompt,
-      }];
+      const messages = [
+        {
+          role: "user",
+          content: prompt,
+        }
+      ];
 
       // Include the required fields model and max_tokens
       const model = "claude-3-haiku-20240307"; // Use the correct model identifier as needed
@@ -81,10 +78,12 @@ module.exports = async (req, res) => {
 
       // Send the summary as the response
       res.status(200).json({ summary });
+
     } catch (error) {
       console.error('Error handling request:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
+
   } else {
     res.status(405).json({ error: 'Method Not Allowed' });
   }
