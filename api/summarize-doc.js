@@ -10,7 +10,19 @@ export default async (req, res) => {
       const documentUrl = `https://www.federalregister.gov/api/v1/documents/${documentNumber}`;
 
       const documentResponse = await fetch(documentUrl);
-      const documentData = await documentResponse.json();
+    //   const documentData = await documentResponse.json();
+
+      console.log('Response Status:', documentResponse.status);
+      console.log('Response Headers:', documentResponse.headers);
+      console.log('Response Body:', await documentResponse.text());
+
+      if (documentResponse.headers.get('content-type').includes('application/json')) {
+        const documentData = await documentResponse.json();
+        // Process the JSON data
+      } else {
+        console.log('Unexpected response format:', await documentResponse.text());
+        throw new Error('Unexpected response format');
+      }
 
       const fullTextXml = documentData.full_text_xml_url;
       const truncatedFullTextXml = fullTextXml.slice(0, 10000);
