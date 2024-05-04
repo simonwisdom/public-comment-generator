@@ -59,7 +59,7 @@ const App = () => {
       interest
     };
     console.log('Payload to send:', payload);
-
+  
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',
       headers: {
@@ -70,16 +70,15 @@ const App = () => {
       .then(response => response.blob())
       .then(blob => {
         const url = window.URL.createObjectURL(new Blob([blob]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'output.pdf');
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '500px'; // Set a fixed height or make it responsive
+        iframe.src = url;
+        document.getElementById('pdfViewer').appendChild(iframe);
       })
       .catch((error) => console.error('Error:', error));
   };
-
+  
   return (
     <div className="container">
       <h1>Enter Document Number (in the form XXXX-XXXXX)</h1>
@@ -106,8 +105,10 @@ const App = () => {
       </label>
       <br />
       <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>{isLoading ? 'Creating PDF...' : 'Generate PDF'}</button>
+      <div id="pdfViewer"></div>
     </div>
   );
+  
 };
 
 export default App;
