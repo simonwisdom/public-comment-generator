@@ -38,27 +38,14 @@ const App = () => {
         return response.json();
       })
       .then(data => {
+        setTitle(data.title); // Now setting the title
         setSummary(data.summary);
-        console.log('Summary received:', data.summary);
+        console.log('Data received:', data);
       })
       .catch(error => {
         console.error('Error:', error);
-        fetch('https://public-comment-generator-roan.vercel.app/api/summarize-doc', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ documentNumber }),
-        })
-          .then(response => response.text())
-          .then(errorText => {
-            console.error('Server error:', errorText);
-            setSummary('Error occurred while fetching summary');
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            setSummary('Error occurred while fetching summary');
-          });
+        setSummary('Error occurred while fetching summary');
+        setTitle(''); // Reset title if there is an error
       });
   };
 
@@ -98,6 +85,8 @@ const App = () => {
       <button onClick={handleSummarizeDoc}>Summarize Document</button>
       <h2>Summary</h2>
       <p>{summary}</p>
+      <h2>Document Title</h2> {/* Added title display */}
+      <p>{title}</p>
       <h2>Enter Details</h2>
       <label>
         Title:
