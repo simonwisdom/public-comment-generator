@@ -31,14 +31,34 @@ const App = () => {
       },
       body: JSON.stringify({ documentNumber }),
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
         setSummary(data.summary);
         console.log('Summary received:', data.summary);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error:', error);
-        setSummary('Error occurred while fetching summary');
+        fetch('https://public-comment-generator-roan.vercel.app/api/summarize-doc', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ documentNumber }),
+        })
+          .then(response => response.text())
+          .then(errorText => {
+            console.error('Server error:', errorText);
+            setSummary('Error occurred while fetching summary');
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            setSummary('Error occurred while fetching summary');
+          });
       });
   };
 
