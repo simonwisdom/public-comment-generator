@@ -121,7 +121,8 @@ export default async function handler(req, res) {
       const textWidth = doc.widthOfString(address);
       const pageWidth = doc.page.width;
       const addressX = pageWidth - textWidth - 50;
-      doc.text(address, addressX, 50);
+      doc.fontSize(10); // Set the font size to 10
+      doc.text(address, addressX, 50, { align: 'right' });
     }
 
     doc.text(`Title: ${title}`, 50, 140, { width: 500 });
