@@ -117,7 +117,7 @@ export default async function handler(req, res) {
         }
       }
 
-     // Generate PDF
+   // Generate PDF
     const doc = new PDFDocument();
     let buffers = [];
 
@@ -157,3 +157,11 @@ export default async function handler(req, res) {
     }
 
     doc.end();
+    } catch (error) {
+      console.error('Error handling request:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method Not Allowed' });
+  }
+}
