@@ -47,8 +47,8 @@ export default async function handler(req, res) {
 
       const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
 
-      const imageBuffer = Buffer.from(output[0], 'base64');
-      const image = await Jimp.read(imageBuffer);
+      // Load the generated image using Jimp
+      const image = await Jimp.read(Buffer.from(output[0], 'base64'));
 
       // Remove the background and make it transparent
       image.rgba(false).background(0xFFFFFFFF).flatten();

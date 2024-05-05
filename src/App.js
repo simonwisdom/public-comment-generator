@@ -140,7 +140,7 @@ const App = () => {
         <input className="input" type="text" value={interest} onChange={handleInterestChange} />
       </label>
       <br />
-      <button className="button" onClick={handleGenerateLogo} disabled={isLoading}>
+      {/* <button className="button" onClick={handleGenerateLogo} disabled={isLoading}>
         {isLoading ? 'Generating Logo...' : 'Generate Logo'}
       </button>
       {logoUrl && <img src={logoUrl} alt="Generated Logo" />}
@@ -155,7 +155,7 @@ const App = () => {
             Select This Logo
           </label>
         </div>
-      )}
+      )} */}
       <br />
       <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>
         {isLoading ? 'Creating PDF...' : 'Generate PDF'}
