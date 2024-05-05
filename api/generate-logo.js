@@ -15,8 +15,8 @@ export default async function handler(req, res) {
 
       const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
 
-      // Load the generated image using Sharp
-      const image = sharp(Buffer.from(output[0], 'base64'));
+      // Load the generated image using Sharp with failOnError: false
+      const image = sharp(Buffer.from(output[0], 'base64'), { failOnError: false });
 
       // Remove the background and make it transparent
       const outputBuffer = await image
