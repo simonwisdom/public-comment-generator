@@ -1,8 +1,5 @@
 import 'dotenv/config';
 import PDFDocument from 'pdfkit';
-import Replicate from 'replicate';
-
-const replicate = new Replicate();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -102,25 +99,9 @@ export default async function handler(req, res) {
     // Extract the detailed content from the API response
     const detailedContent = content.content[0].text; // Assuming the detailed content is always the first element
 
-      // Generate logo using Replicate
-      // let logoUrl = null;
-      // if (group) {
-      //   try {
-      //     const input = {
-      //       prompt: `a professional, minimal logo of ${group}`,
-      //       scheduler: "K_EULER"
-      //     };
-      //     const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
-      //     logoUrl = output[0];
-      //   } catch (error) {
-      //     console.error('Error generating logo:', error);
-      //   }
-      // }
-
-   // Generate PDF
+    // Generate PDF
     const doc = new PDFDocument();
     let buffers = [];
-
     doc.on('data', buffers.push.bind(buffers));
     doc.on('end', () => {
       let pdfData = Buffer.concat(buffers);
@@ -132,36 +113,32 @@ export default async function handler(req, res) {
       res.end(pdfData);
     });
 
-    // Add logo to the header
+    // Add logo to the header if present
     if (logoUrl) {
       const response = await fetch(logoUrl);
       const buffer = await response.buffer();
-      doc.image(buffer, { fit: [100, 100], align: 'center' });
-      doc.moveDown(2); // Add extra space after the logo
+      doc.image(buffer, 50, 50, { width: 100 });  // Set image at top left
+      // Set where the text will start beside the image
+      doc.text(`Title: ${title}`, 160, 50, { width: 400 });  // Adjust the starting point and width based on the image position
+    } else {
+      doc.text(`Title: ${title}`, 50, 50);  // No image, start text normally
     }
 
-    // Add title
-    doc.fontSize(14).text(`Title: ${title}`, { align: 'left' });
+    // Continue with the rest of the text
     doc.moveDown();
+    doc.text(`Group: ${group}`);
+    doc.text(`Interest: ${interest}`);
 
-    // Add group and interest
-    doc.fontSize(12).text(`Group: ${group}`, { align: 'left' });
-    doc.fontSize(12).text(`Interest: ${interest}`, { align: 'left' });
-    doc.moveDown();
-
-    // Add detailed content
-    if (detailedContent) {
-      doc.fontSize(12).text(detailedContent, { align: 'left' });
-    } else {
-      doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
+    // Assume content text is being passed to handle in a similar way if long enough
+    if (req.body.summary) {
+      // Text below the image, assuming image height is 100 and starts at 50
+      doc.text(req.body.summary, 50, 150, {
+        width: 490  // Assuming page width is 540 and left margin is 50
+      });
     }
 
     doc.end();
-    } catch (error) {
-      console.error('Error handling request:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
   } else {
     res.status(405).json({ error: 'Method Not Allowed' });
   }
-}
+  }

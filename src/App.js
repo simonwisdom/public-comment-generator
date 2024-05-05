@@ -144,7 +144,18 @@ const App = () => {
         {isLoading ? 'Generating Logo...' : 'Generate Logo'}
       </button>
       {logoUrl && <img src={logoUrl} alt="Generated Logo" />}
-      {logoUrl && <button onClick={() => setLogoSelected(true)}>Select This Logo</button>}
+      {logoUrl && (
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={logoSelected}
+              onChange={() => setLogoSelected(!logoSelected)}
+            />
+            Select This Logo
+          </label>
+        </div>
+      )}
       <br />
       <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>
         {isLoading ? 'Creating PDF...' : 'Generate PDF'}
