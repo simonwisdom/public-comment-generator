@@ -58,21 +58,6 @@ const App = () => {
       });
   };
 
-  To display the company address to the right of the logo, you'll need to update the handleSearchOfficialLogo function to handle the address data and update the JSX to conditionally render the address. Here's the modified code:
-jsx
-
-Copy code
-import React, { useState } from 'react';
-import './App.css';
-
-const App = () => {
-  // ...
-
-  const [officialLogoUrl, setOfficialLogoUrl] = useState('');
-  const [companyAddress, setCompanyAddress] = useState('');
-
-  // ...
-
   const handleSearchOfficialLogo = () => {
     setIsLoading(true);
     fetch('https://public-comment-generator-roan.vercel.app/api/search-clearbit-logo', {
