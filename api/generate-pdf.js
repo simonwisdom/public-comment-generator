@@ -129,12 +129,11 @@ export default async function handler(req, res) {
     doc.text(`Group: ${group}`);
     doc.text(`Interest: ${interest}`);
 
-    // Assume content text is being passed to handle in a similar way if long enough
-    if (req.body.summary) {
-      // Text below the image, assuming image height is 100 and starts at 50
-      doc.text(req.body.summary, 50, 150, {
-        width: 490  // Assuming page width is 540 and left margin is 50
-      });
+    // Add detailed content
+    if (detailedContent) {
+      doc.fontSize(12).text(detailedContent, { align: 'left' });
+    } else {
+      doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
     }
 
     doc.end();
