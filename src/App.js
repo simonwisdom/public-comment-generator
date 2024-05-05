@@ -145,6 +145,7 @@ const App = () => {
 
   return (
     <div className="container">
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>Generate a high quality PDF for public comment</h1>
       <h1>Enter Document Number (in the form XXXX-XXXXX)</h1>
       <input className="input" type="text" value={documentNumber} onChange={handleDocumentNumberChange} />
       <button className="button" onClick={handleSummarizeDoc} disabled={isLoading}>
