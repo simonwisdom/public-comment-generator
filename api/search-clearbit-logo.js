@@ -34,8 +34,8 @@ export default async function handler(req, res) {
         throw new Error(`API responded with status: ${apiResponse.status} and body: ${errorBody}`);
       }
 
-      const responseData = await apiResponse.json();
-      const domain = responseData.messages[0].content.trim();
+      const content = await apiResponse.json();
+      const domain = content.content[0].text;
 
       // Fetch the company logo using Clearbit API
       const clearbitResponse = await fetch(`https://logo.clearbit.com/${domain}`);
