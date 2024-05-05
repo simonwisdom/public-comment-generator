@@ -99,47 +99,66 @@ export default async function handler(req, res) {
     // Extract the detailed content from the API response
     const detailedContent = content.content[0].text; // Assuming the detailed content is always the first element
 
-    // Generate PDF
-    const doc = new PDFDocument();
-    let buffers = [];
+      // Generate logo using Replicate
+      let logoUrl = null;
+      if (group) {
+        try {
+          const input = {
+            prompt: `a professional, minimal logo of ${group}`,
+            scheduler: "K_EULER"
+          };
+          const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
+          logoUrl = output[0];
+        } catch (error) {
+          console.error('Error generating logo:', error);
+        }
+      }
 
-    doc.on('data', buffers.push.bind(buffers));
-    doc.on('end', () => {
-      let pdfData = Buffer.concat(buffers);
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="output.pdf"',
-        'Content-Length': pdfData.length
+      // Generate PDF
+      const doc = new PDFDocument();
+      let buffers = [];
+
+      doc.on('data', buffers.push.bind(buffers));
+      doc.on('end', () => {
+        let pdfData = Buffer.concat(buffers);
+        res.writeHead(200, {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'attachment; filename="output.pdf"',
+          'Content-Length': pdfData.length
+        });
+        res.end(pdfData);
       });
-      res.end(pdfData);
-    });
 
-    // Add header
-    // doc.fontSize(16).text('Public Comment on CHIPS Act Funding', { align: 'center' });
-    // doc.moveDown();
+      // Add logo to the header
+      if (logoUrl) {
+        const response = await fetch(logoUrl);
+        const buffer = await response.buffer();
+        doc.image(buffer, { fit: [100, 100], align: 'center' });
+        doc.moveDown();
+      }
 
-    // Add title
-    doc.fontSize(14).text(`Title: ${title}`, { align: 'left' });
-    doc.moveDown();
+      // Add title
+      doc.fontSize(14).text(`Title: ${title}`, { align: 'left' });
+      doc.moveDown();
 
-    // Add group and interest
-    doc.fontSize(12).text(`Group: ${group}`, { align: 'left' });
-    doc.fontSize(12).text(`Interest: ${interest}`, { align: 'left' });
-    doc.moveDown();
+      // Add group and interest
+      doc.fontSize(12).text(`Group: ${group}`, { align: 'left' });
+      doc.fontSize(12).text(`Interest: ${interest}`, { align: 'left' });
+      doc.moveDown();
 
-    // Add detailed content
-    if (detailedContent) {
-      doc.fontSize(12).text(detailedContent, { align: 'left' });
-    } else {
-      doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
+      // Add detailed content
+      if (detailedContent) {
+        doc.fontSize(12).text(detailedContent, { align: 'left' });
+      } else {
+        doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
+      }
+
+      doc.end();
+    } catch (error) {
+      console.error('Error handling request:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    doc.end();
-  } catch (error) {
-    console.error('Error handling request:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  } else {
+    res.status(405).json({ error: 'Method Not Allowed' });
   }
-} else {
-  res.status(405).json({ error: 'Method Not Allowed' });
 }
-};
