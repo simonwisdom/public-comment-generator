@@ -125,8 +125,8 @@ export default async function handler(req, res) {
       doc.text(address, addressX, 50, { align: 'right' });
     }
 
-    doc.fontSize(14)
-    doc.text(`${title}`, 50, 140, { width: 500 });
+    // doc.fontSize(14)
+    // doc.text(`${title}`, 50, 140, { width: 500 });
     
     // Not including group and interest
     // doc.moveDown();
