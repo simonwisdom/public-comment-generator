@@ -1,6 +1,8 @@
 # Public Comment PDF Generator
 
-![Homepage](media/homepage.jpeg "Homepage Example") ![Generated PDF](media/generated_pdf.jpeg "Generated PDF Example")
+![homepage](https://github.com/simonwisdom/public-comment-generator/assets/11617175/3857a2c6-0b96-4543-bbd7-5a78f0214e49)
+![generated_pdf](https://github.com/simonwisdom/public-comment-generator/assets/11617175/dcf81066-bc8f-4d90-add9-bfc497db8a4e)
+
 
 ## Overview
 This application was developed during the Apart Research AI x Governance hackathon to demonstrate vulnerabilities in the public comment system on legislative documents from [federalregister.gov](federalregister.gov). It shows how easily one can generate authentic-looking public comments that could complicate the policymaking process by requiring verification.
