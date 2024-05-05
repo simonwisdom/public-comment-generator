@@ -121,7 +121,7 @@ export default async function handler(req, res) {
     }
 
     // Continue with the rest of the text
-    doc.moveDown(8);
+    doc.moveDown();
     doc.text(`Group: ${group}`);
     doc.text(`Interest: ${interest}`);
 
