@@ -12,11 +12,7 @@ The project exposes how AI can manipulate democratic processes, particularly thr
 ## Hackathon Context
 Created in a weekend for the Apart Research AI x Governance hackathon, this project explores the intersection of AI and public governance. More about the hackathon can be found [here](https://www.apartresearch.com/post/join-ai-democracy).
 
-<video width="640" height="480" controls>
-  <source src="media/side-by-side-demo-small.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
+https://github.com/simonwisdom/public-comment-generator/assets/11617175/0b64c990-901d-4167-bd49-eef02cb02ae9
 
 ## Features
 - **Document Retrieval and Summarization**: Fetches and summarizes Federal Registry documents using the Claude API with the Haiku model.
