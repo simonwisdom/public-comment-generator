@@ -109,28 +109,28 @@ export default async function handler(req, res) {
     if (officialLogoUrl) {
       const response = await fetch(officialLogoUrl);
       const buffer = await response.buffer();
-      doc.image(buffer, 50, 50, { width: 100 });  // Set image at top left
-      // Set where the text will start beside the image
-      doc.text(`Title: ${title}`, 160, 50, { width: 400 });  // Adjust the starting point and width based on the image position
+      doc.image(buffer, 50, 50, { width: 80 });  // Reduced image width
+      doc.text(`Title: ${title}`, 50, 140, { width: 500 });  // Start text below logo
     } else if (generatedLogoUrl) {
       const response = await fetch(generatedLogoUrl);
-      const buffer = await response.buffer();
-      doc.image(buffer, 50, 50, { width: 100 });  // Set image at top left
-      // Set where the text will start beside the image
-      doc.text(`Title: ${title}`, 160, 50, { width: 400 });  // Adjust the starting point and width based on the image position
+      const buffer = await response.buffer();  
+      doc.image(buffer, 50, 50, { width: 80 });  // Reduced image width
+      doc.text(`Title: ${title}`, 50, 140, { width: 500 });  // Start text below logo
     } else {
       doc.text(`Title: ${title}`, 50, 50);  // No image, start text normally
     }
 
     // Continue with the rest of the text
-    doc.moveDown();
+    doc.moveDown(8);
     doc.text(`Group: ${group}`);
     doc.text(`Interest: ${interest}`);
 
     // Add detailed content
     if (detailedContent) {
-      doc.fontSize(12).text(detailedContent, { align: 'left' });
+      doc.moveDown();
+      doc.fontSize(12).text(detailedContent, { align: 'left' });  // Remove indentation
     } else {
+      doc.moveDown();
       doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
     }
 
