@@ -71,7 +71,7 @@ const App = () => {
         if (data.logoUrl) {
           setOfficialLogoUrl(data.logoUrl);
         } else {
-          setOfficialLogoUrl('no matching logo found, you could try different wording');
+          setOfficialLogoUrl('No matching logo found, you could try different wording');
         }
         setIsLoading(false);
       })
