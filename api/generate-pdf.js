@@ -117,51 +117,43 @@ export default async function handler(req, res) {
         }
       }
 
-      // Generate PDF
-      const doc = new PDFDocument();
-      let buffers = [];
+     // Generate PDF
+    const doc = new PDFDocument();
+    let buffers = [];
 
-      doc.on('data', buffers.push.bind(buffers));
-      doc.on('end', () => {
-        let pdfData = Buffer.concat(buffers);
-        res.writeHead(200, {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': 'attachment; filename="output.pdf"',
-          'Content-Length': pdfData.length
-        });
-        res.end(pdfData);
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => {
+      let pdfData = Buffer.concat(buffers);
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': 'attachment; filename="output.pdf"',
+        'Content-Length': pdfData.length
       });
+      res.end(pdfData);
+    });
 
-      // Add logo to the header
-      if (logoUrl) {
-        const response = await fetch(logoUrl);
-        const buffer = await response.buffer();
-        doc.image(buffer, { fit: [100, 100], align: 'center' });
-        doc.moveDown();
-      }
-
-      // Add title
-      doc.fontSize(14).text(`Title: ${title}`, { align: 'left' });
-      doc.moveDown();
-
-      // Add group and interest
-      doc.fontSize(12).text(`Group: ${group}`, { align: 'left' });
-      doc.fontSize(12).text(`Interest: ${interest}`, { align: 'left' });
-      doc.moveDown();
-
-      // Add detailed content
-      if (detailedContent) {
-        doc.fontSize(12).text(detailedContent, { align: 'left' });
-      } else {
-        doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
-      }
-
-      doc.end();
-    } catch (error) {
-      console.error('Error handling request:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    // Add logo to the header
+    if (logoUrl) {
+      const response = await fetch(logoUrl);
+      const buffer = await response.buffer();
+      doc.image(buffer, { fit: [100, 100], align: 'center' });
+      doc.moveDown(2); // Add extra space after the logo
     }
-  } else {
-    res.status(405).json({ error: 'Method Not Allowed' });
-  }
-}
+
+    // Add title
+    doc.fontSize(14).text(`Title: ${title}`, { align: 'left' });
+    doc.moveDown();
+
+    // Add group and interest
+    doc.fontSize(12).text(`Group: ${group}`, { align: 'left' });
+    doc.fontSize(12).text(`Interest: ${interest}`, { align: 'left' });
+    doc.moveDown();
+
+    // Add detailed content
+    if (detailedContent) {
+      doc.fontSize(12).text(detailedContent, { align: 'left' });
+    } else {
+      doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
+    }
+
+    doc.end();
