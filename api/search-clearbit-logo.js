@@ -37,8 +37,12 @@ export default async function handler(req, res) {
       const content = await apiResponse.json();
       const domain = content.content[0].text;
 
+      console.log('Generated domain:', domain); // Log the generated domain
+
       // Fetch the company logo using Clearbit API
       const clearbitResponse = await fetch(`https://logo.clearbit.com/${domain}`);
+
+      console.log('Clearbit API response status:', clearbitResponse.status); // Log the Clearbit API response status
 
       if (!clearbitResponse.ok) {
         throw new Error(`Clearbit API responded with status: ${clearbitResponse.status}`);
