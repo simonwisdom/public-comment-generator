@@ -8,6 +8,8 @@ const App = () => {
   const [group, setGroup] = useState('');
   const [interest, setInterest] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [logoUrl, setLogoUrl] = useState('');
+  const [logoSelected, setLogoSelected] = useState(false);
 
   const handleDocumentNumberChange = (event) => {
     setDocumentNumber(event.target.value);
@@ -54,21 +56,41 @@ const App = () => {
       });
   };
 
+  const handleGenerateLogo = () => {
+    setIsLoading(true);
+    fetch('https://public-comment-generator-roan.vercel.app/api/generate-logo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ group })
+    })
+      .then(response => response.json())
+      .then(data => {
+        setLogoUrl(data.logoUrl);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setIsLoading(false);
+      });
+  };
+
   const handleGeneratePDF = () => {
     setIsLoading(true);
     const payload = {
       title,
       summary,
       group,
-      interest
+      interest,
+      logoUrl: logoSelected ? logoUrl : null
     };
-    console.log('Payload to send:', payload);
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     })
       .then(response => response.blob())
       .then(blob => {
@@ -117,6 +139,12 @@ const App = () => {
         What is your vested interest in this legislation? How will this affect you?:
         <input className="input" type="text" value={interest} onChange={handleInterestChange} />
       </label>
+      <br />
+      <button className="button" onClick={handleGenerateLogo} disabled={isLoading}>
+        {isLoading ? 'Generating Logo...' : 'Generate Logo'}
+      </button>
+      {logoUrl && <img src={logoUrl} alt="Generated Logo" />}
+      {logoUrl && <button onClick={() => setLogoSelected(true)}>Select This Logo</button>}
       <br />
       <button className="button" onClick={handleGeneratePDF} disabled={isLoading}>
         {isLoading ? 'Creating PDF...' : 'Generate PDF'}

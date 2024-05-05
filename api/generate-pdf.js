@@ -6,7 +6,7 @@ const replicate = new Replicate();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { title, summary, group, interest } = req.body;
+    const { title, summary, group, interest, logoUrl } = req.body;
 
   // Construct a custom prompt and incorporate all relevant details
   const customPrompt = `Please generate a detailed and constructive comment based on the following inputs. Here are two examples of professional-sounding comments:
@@ -103,19 +103,19 @@ export default async function handler(req, res) {
     const detailedContent = content.content[0].text; // Assuming the detailed content is always the first element
 
       // Generate logo using Replicate
-      let logoUrl = null;
-      if (group) {
-        try {
-          const input = {
-            prompt: `a professional, minimal logo of ${group}`,
-            scheduler: "K_EULER"
-          };
-          const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
-          logoUrl = output[0];
-        } catch (error) {
-          console.error('Error generating logo:', error);
-        }
-      }
+      // let logoUrl = null;
+      // if (group) {
+      //   try {
+      //     const input = {
+      //       prompt: `a professional, minimal logo of ${group}`,
+      //       scheduler: "K_EULER"
+      //     };
+      //     const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
+      //     logoUrl = output[0];
+      //   } catch (error) {
+      //     console.error('Error generating logo:', error);
+      //   }
+      // }
 
    // Generate PDF
     const doc = new PDFDocument();
