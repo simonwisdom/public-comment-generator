@@ -120,10 +120,10 @@ export default async function handler(req, res) {
       doc.text(`Title: ${title}`, 50, 50);  // No image, start text normally
     }
 
-    // Continue with the rest of the text
-    doc.moveDown();
-    doc.text(`Group: ${group}`);
-    doc.text(`Interest: ${interest}`);
+    // Not including group and interest
+    // doc.moveDown();
+    // doc.text(`Group: ${group}`);
+    // doc.text(`Interest: ${interest}`);
 
     // Add detailed content
     if (detailedContent) {

@@ -201,6 +201,13 @@ const App = () => {
 
       <div id="pdfViewer"></div>
 
+      {/* Conditionally render the Clearbit credit link */}
+      {(logoUrl || officialLogoUrl) && (
+        <footer>
+          <p>Logo provided by <a href="https://clearbit.com" target="_blank" rel="noopener noreferrer">Clearbit.com</a></p>
+        </footer>
+      )}
+      
       {isLoading && (
         <div className="modal">
           <div className="modal-content">
