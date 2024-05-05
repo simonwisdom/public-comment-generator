@@ -3,7 +3,7 @@ import PDFDocument from 'pdfkit';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { title, summary, group, interest, logoUrl } = req.body;
+    const { title, summary, group, interest, generatedLogoUrl, officialLogoUrl } = req.body;
 
   // Construct a custom prompt and incorporate all relevant details
   const customPrompt = `Please generate a detailed and constructive comment based on the following inputs. Here are two examples of professional-sounding comments:
@@ -26,7 +26,8 @@ export default async function handler(req, res) {
 
     Re: Preventing the Improper Use of CHIPS Act Funding (RIN 0693-AB70)
 
-    We appreciate the opportunity to provide comments in response to the Commerce Department's Notice of Proposed Rulemaking on Preventing the Improper Use of CHIPS Act Funding ("Proposed Rule"). While we applaud the passage of the CHIPS Act and the Administration's efforts to ensure CHIPS Act funding does not inadvertently benefit the United States' adversaries or otherwise put our national security at risk, we have serious concerns that the breadth of the restrictions contained in the Proposed Rule—particularly those restricting certain technology licensing agreements—will harm rather than protect U.S. economic and national security interests.
+    We appreciate the opportunity to provide comments in response to the Commerce Department's Notice of Proposed Rulemaking on Preventing the Improper Use of CHIPS Act Funding ("Proposed Rule"). 
+    While we applaud the passage of the CHIPS Act and the Administration's efforts to ensure CHIPS Act funding does not inadvertently benefit the United States' adversaries or otherwise put our national security at risk, we have serious concerns that the breadth of the restrictions contained in the Proposed Rule—particularly those restricting certain technology licensing agreements—will harm rather than protect U.S. economic and national security interests.
 
     Sincerely,
     Innovation Alliance
@@ -34,31 +35,22 @@ export default async function handler(req, res) {
     Licensing Executives Society (USA & Canada), Inc.
 
     Example 2:
-    Input:
     {
-    "title": "Comments on Proposed Guardrails for CHIPS Act Funding Recipients",
-    "summary": "Concerns about the proposed guardrails unintentionally curtailing the production of chips for downstream consumer technologies, creating supply shortages, and discouraging participation in the program.",
-    "group": "Consumer Technology Association (CTA)",
-    "interest": "Representing the U.S. consumer technology industry and manufacturers of consumer technologies that may contain both leading-edge and legacy chips."
+    "title": "Airworthiness Directives: The Boeing Company Airplanes",
+    "summary": "The proposed rule aims to implement new safety regulations affecting all Boeing Company airplanes, with specific emphasis on improving fuselage and wing structure integrity.",
+    "group": "Qantas Airlines",
+    "interest": "Ensuring the highest standards of safety and compliance in aircraft operations, maintaining fleet efficiency, and protecting passenger safety."
     }
-    Output:
-    May 23, 2023
 
-    U.S. Department of Commerce  
-    National Institute of Standards and Technology
-    100 Bureau Drive
-    Gaithersburg, MD 20899
+    Qantas would like to provide the following comments to the FAA regarding NPRM FAA-2024-0231.
 
-    Re: Preventing the Improper Use of CHIPS Act Funding (88 FR 17439; Docket Number: 230313-0074)
-
-    Dear Under Secretary Locascio:
-
-    The Consumer Technology Association (CTA)® appreciates the opportunity to submit comments in response to the National Institute of Standards and Technology's (NIST's) Proposed Rule on Preventing the Improper Use of CHIPS Act Funding.
-
-    CTA strongly supports efforts by the Biden-Harris Administration to strengthen supply chain security and resilience, spur innovation, increase competitiveness, de-risk from the People's Republic of China, and ensure long-term U.S. global technology leadership. However, our overarching concern is that the proposed guardrails will unintentionally curtail the production of chips for use in downstream consumer technologies, thereby creating further supply shortages in the future. The Proposed Rule will also prevent recipients and their affiliates from participating in international semiconductor activity and thereby discourage their participation in the program.
-
-    Sincerely,
-    Consumer Technology Association (CTA)
+    Qantas notes that DDG MEL 30-21-01-02 has been updated to state "Perform a General Visual Inspection (GVI) of the engine inlet cavity for heat damage and applicable corrective actions at the completion of the dispatch interval period in accordance with Boeing Requirements Bulletin SB B787-81205-SB540023-00 and Collins Service Bulletin SB 787-G71-013, Rev 00 or later approved revisions." which will cover future applications of MEL 30-21-01-02 and MEL 30-21-01-07 for heat damage.
+    
+    Qantas finds that using a Service Bulletin to rectify an MEL is highly unusual and that MEL rectification by Maintenance Personnel is primarily driven by the appliable AMM. Qantas is concerned that Maintenance Personnel don’t typically refer to the application procedure of the MEL as part of the MEL rectification process and that Maintenance Personnel could inadvertently fail to carry out the required inspections per Boeing Requirements Bulletin SB B787-81205-SB540023-00 and Collins Service Bulletin SB 787-G71-013, Rev 00 or later approved revisions.
+    
+    Qantas would like to suggest that the AMM is also updated with the requirements of Boeing Requirements Bulletin SB B787-81205-SB540023-00 and Collins Service Bulletin SB 787-G71-013 to ensure that Maintenance Personnel cannot overlook these inspection requirements.
+    
+    Boeing Requirements Bulletin SB B787-81205-SB540023-00 specifies the actions required to be carried out on an Inlet Cowl currently fitted to an aircraft. However, Qantas notes that sometimes Inlet Cowls are not fitted to an aircraft and the last install position is unknown, hence the application of MEL 30-21-01-02 or MEL 30-21-01-07 is also unknown. An example would be an Inlet Cowl that is second hand. Qantas would like to politely request that FAA provide guidance to Operators in how to comply with the NPRM for Inlet Cowls not fitted to an aircraft and the last install position is unknown.
 
     Now, please generate a comment based on the following inputs:`;
 
@@ -113,9 +105,15 @@ export default async function handler(req, res) {
       res.end(pdfData);
     });
 
-    // Add logo to the header if present
-    if (logoUrl) {
-      const response = await fetch(logoUrl);
+    // Add logo to the header
+    if (officialLogoUrl) {
+      const response = await fetch(officialLogoUrl);
+      const buffer = await response.buffer();
+      doc.image(buffer, 50, 50, { width: 100 });  // Set image at top left
+      // Set where the text will start beside the image
+      doc.text(`Title: ${title}`, 160, 50, { width: 400 });  // Adjust the starting point and width based on the image position
+    } else if (generatedLogoUrl) {
+      const response = await fetch(generatedLogoUrl);
       const buffer = await response.buffer();
       doc.image(buffer, 50, 50, { width: 100 });  // Set image at top left
       // Set where the text will start beside the image

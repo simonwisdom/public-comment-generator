@@ -10,6 +10,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [logoUrl, setLogoUrl] = useState('');
   const [logoSelected, setLogoSelected] = useState(false);
+  const [officialLogoUrl, setOfficialLogoUrl] = useState('');
 
   const handleDocumentNumberChange = (event) => {
     setDocumentNumber(event.target.value);
@@ -56,6 +57,30 @@ const App = () => {
       });
   };
 
+  const handleSearchOfficialLogo = () => {
+    setIsLoading(true);
+    fetch('https://public-comment-generator-roan.vercel.app/api/search-clearbit-logo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ group })
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.logoUrl) {
+          setOfficialLogoUrl(data.logoUrl);
+        } else {
+          setOfficialLogoUrl('no matching logo found, you could try different wording');
+        }
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setIsLoading(false);
+      });
+  };
+
   const handleGenerateLogo = () => {
     setIsLoading(true);
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-logo', {
@@ -83,7 +108,8 @@ const App = () => {
       summary,
       group,
       interest,
-      logoUrl: logoSelected ? logoUrl : null
+      generatedLogoUrl: logoSelected ? logoUrl : null,
+      officialLogoUrl: officialLogoUrl.startsWith('data:') ? officialLogoUrl : null
     };
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',
@@ -134,6 +160,18 @@ const App = () => {
         What industry/lobby group do you represent?:
         <input className="input" type="text" value={group} onChange={handleGroupChange} />
       </label>
+      <button className="button" onClick={handleSearchOfficialLogo} disabled={isLoading}>
+        {isLoading ? 'Searching...' : 'Search for official logo'}
+      </button>
+      {officialLogoUrl && (
+        <>
+          {officialLogoUrl.startsWith('data:') ? (
+            <img src={officialLogoUrl} alt="Official Logo" />
+          ) : (
+            <p>{officialLogoUrl}</p>
+          )}
+        </>
+      )}
       <br />
       <label>
         What is your vested interest in this legislation? How will this affect you?:
