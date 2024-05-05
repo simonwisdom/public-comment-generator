@@ -125,8 +125,8 @@ export default async function handler(req, res) {
       doc.text(address, addressX, 50, { align: 'right' });
     }
 
-    doc.fontSize(14)
-    doc.text(`${title}`, 50, 140, { width: 500 });
+    // doc.fontSize(14)
+    // doc.text(`${title}`, 50, 140, { width: 500 });
     
     // Not including group and interest
     // doc.moveDown();
@@ -136,7 +136,7 @@ export default async function handler(req, res) {
     // Add detailed content
     if (detailedContent) {
       doc.moveDown();
-      doc.fontSize(12).text(detailedContent, { align: 'left' });  // Remove indentation
+      doc.fontSize(12).text(detailedContent, { align: 'left' }, 50, 140, { width: 500 }); 
     } else {
       doc.moveDown();
       doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
