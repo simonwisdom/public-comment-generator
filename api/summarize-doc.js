@@ -23,7 +23,8 @@ export default async (req, res) => {
         throw new Error('Unexpected response format');
       }
 
-      const fullTextXml = documentData.full_text_xml_url;
+      const fullTextResponse = await fetch(fullTextXmlUrl);
+      const fullTextXml = await fullTextResponse.text();
       const truncatedFullTextXml = fullTextXml.slice(0, 10000);
 
       const prompt = `Provide a concise, high-level summary of the key points from the document below, as if an experienced policy researcher were briefing a senior staffer. Focus on essential information and context, synthesizing the content to address why this document is important.
