@@ -157,7 +157,7 @@ const App = () => {
       </label>
       <br />
       <label>
-        What industry/lobby group do you represent?:
+        What company/industry/lobby group do you represent?:
         <input className="input" type="text" value={group} onChange={handleGroupChange} />
       </label>
       <button className="button" onClick={handleSearchOfficialLogo} disabled={isLoading}>
