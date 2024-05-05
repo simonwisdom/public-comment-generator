@@ -127,6 +127,7 @@ export default async function handler(req, res) {
 
     // doc.fontSize(14)
     // doc.text(`${title}`, 50, 140, { width: 500 });
+    doc.text(50, 140, { width: 500 });
     
     // Not including group and interest
     // doc.moveDown();
