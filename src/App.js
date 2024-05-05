@@ -115,7 +115,8 @@ const App = () => {
       group,
       interest,
       generatedLogoUrl: logoSelected ? logoUrl : null,
-      officialLogoUrl: officialLogoUrl.startsWith('data:') ? officialLogoUrl : null
+      officialLogoUrl: officialLogoUrl.startsWith('data:') ? officialLogoUrl : null,
+      address: companyAddress 
     };
     fetch('https://public-comment-generator-roan.vercel.app/api/generate-pdf', {
       method: 'POST',

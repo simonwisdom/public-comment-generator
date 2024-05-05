@@ -109,11 +109,11 @@ export default async function handler(req, res) {
     if (officialLogoUrl) {
       const response = await fetch(officialLogoUrl);
       const buffer = await response.buffer();
-      doc.image(buffer, 50, 50, { width: 80 });  // Reduced image width
+      doc.image(buffer, 50, 50, { width: 50 });  // Reduced image width
     } else if (generatedLogoUrl) {
       const response = await fetch(generatedLogoUrl);
       const buffer = await response.buffer();  
-      doc.image(buffer, 50, 50, { width: 80 });  // Reduced image width
+      doc.image(buffer, 50, 50, { width: 50 });  // Reduced image width
     }
 
     // Add address to the right of the logo
