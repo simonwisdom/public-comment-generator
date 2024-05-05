@@ -136,7 +136,7 @@ export default async function handler(req, res) {
     // Add detailed content
     if (detailedContent) {
       doc.moveDown();
-      doc.fontSize(12).text(detailedContent, { align: 'left' }, 50, 140, { width: 500 }); 
+      doc.fontSize(12).text(detailedContent, 50, doc.y, { align: 'left', width: 500 });
     } else {
       doc.moveDown();
       doc.fontSize(12).text('No detailed content received from the model.', { align: 'left' });
