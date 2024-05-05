@@ -12,9 +12,8 @@ The project exposes how AI can manipulate democratic processes, particularly thr
 ## Hackathon Context
 Created in a weekend for the Apart Research AI x Governance hackathon, this project explores the intersection of AI and public governance. More about the hackathon can be found [here](https://www.apartresearch.com/post/join-ai-democracy).
 
-https://github.com/simonwisdom/public-comment-generator/assets/11617175/0b64c990-901d-4167-bd49-eef02cb02ae9
-
 ## Features
+https://github.com/simonwisdom/public-comment-generator/assets/11617175/0b64c990-901d-4167-bd49-eef02cb02ae9
 - **Document Retrieval and Summarization**: Fetches and summarizes Federal Registry documents using the Claude API with the Haiku model.
 - **Logo Acquisition**: Uses the Clearbit API to retrieve official company logos.
 - **Dynamic PDF Generation**: Creates structured PDFs that include user inputs, document summaries, and logos.
