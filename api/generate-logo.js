@@ -15,6 +15,16 @@ export default async function handler(req, res) {
 
       const output = await replicate.run("stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4", { input });
 
+        // Decode and check the format of the base64 image data
+        const initialBuffer = Buffer.from(output[0], 'base64');
+        const initialImage = sharp(initialBuffer, { failOnError: false });
+        const metadata = await initialImage.metadata();
+
+        if (metadata.format !== 'png') {
+        initialBuffer = await initialImage.toFormat('png').toBuffer();
+        }
+
+
       // Load the generated image using Sharp with failOnError: false
       const image = sharp(Buffer.from(output[0], 'base64'), { failOnError: false });
 

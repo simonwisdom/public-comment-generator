@@ -26,21 +26,16 @@ export default async (req, res) => {
       const fullTextXml = documentData.full_text_xml_url;
       const truncatedFullTextXml = fullTextXml.slice(0, 10000);
 
-      const fields = {
-        documentNumber: documentNumber,
-        truncatedFullTextXml: truncatedFullTextXml,
-      };
-
       const prompt = `Provide a concise, high-level summary of the key points from the document below, as if an experienced policy researcher were briefing a senior staffer. Focus on essential information and context, synthesizing the content to address why this document is important.
 
-      Additionally, identify key stakeholders likely to be affected by or interested in the document's proposals. For each stakeholder, include a sentence describing their potential bias or interest in influencing the document's proposals. Ensure that the stakeholders are relevant to the specific context of the document being summarized.
-      
-      Pick stakeholders that represent diverse interests that ideally do not agree with each other.
-      
-      Prioritize clarity and brevity while ensuring no critical details are omitted. Do not include preamble like 'this is a summary..', jump straight into the summary content.
-      
-      Input:
-      `;
+Additionally, identify key stakeholders likely to be affected by or interested in the document's proposals. For each stakeholder, include a sentence describing their potential bias or interest in influencing the document's proposals. Ensure that the stakeholders are relevant to the specific context of the document being summarized.
+
+Pick stakeholders that represent diverse interests that ideally do not agree with each other.
+
+Prioritize clarity and brevity while ensuring no critical details are omitted. Do not include preamble like 'this is a summary..', jump straight into the summary content.
+
+Input:
+${truncatedFullTextXml}`;
 
       const messages = [
         {
