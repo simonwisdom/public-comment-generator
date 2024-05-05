@@ -138,7 +138,9 @@ export default async function handler(req, res) {
     }
 
     doc.end();
-  } else {
-    res.status(405).json({ error: 'Method Not Allowed' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
   }
+}
