@@ -1,5 +1,8 @@
 import 'dotenv/config';
 import PDFDocument from 'pdfkit';
+import Replicate from 'replicate';
+
+const replicate = new Replicate();
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
