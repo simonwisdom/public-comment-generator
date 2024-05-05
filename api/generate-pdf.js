@@ -3,7 +3,7 @@ import PDFDocument from 'pdfkit';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { title, summary, group, interest, generatedLogoUrl, officialLogoUrl } = req.body;
+    const { title, summary, group, interest, generatedLogoUrl, officialLogoUrl, address } = req.body;
 
   // Construct a custom prompt and incorporate all relevant details
   const customPrompt = `Please generate a detailed and constructive comment based on the following inputs. Here are two examples of professional-sounding comments:
@@ -110,15 +110,21 @@ export default async function handler(req, res) {
       const response = await fetch(officialLogoUrl);
       const buffer = await response.buffer();
       doc.image(buffer, 50, 50, { width: 80 });  // Reduced image width
-      doc.text(`Title: ${title}`, 50, 140, { width: 500 });  // Start text below logo
     } else if (generatedLogoUrl) {
       const response = await fetch(generatedLogoUrl);
       const buffer = await response.buffer();  
       doc.image(buffer, 50, 50, { width: 80 });  // Reduced image width
-      doc.text(`Title: ${title}`, 50, 140, { width: 500 });  // Start text below logo
-    } else {
-      doc.text(`Title: ${title}`, 50, 50);  // No image, start text normally
     }
+
+    // Add address to the right of the logo
+    if (address) {
+      const textWidth = doc.widthOfString(address);
+      const pageWidth = doc.page.width;
+      const addressX = pageWidth - textWidth - 50;
+      doc.text(address, addressX, 50);
+    }
+
+    doc.text(`Title: ${title}`, 50, 140, { width: 500 });
 
     // Not including group and interest
     // doc.moveDown();

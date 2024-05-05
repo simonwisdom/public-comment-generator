@@ -1,6 +1,78 @@
 import 'dotenv/config';
 import fetch from 'node-fetch';
 
+function generateAddressPrompt(group) {
+    return `Provide the most likely corporate headquarters address for the company "${group}". For example, if the input is "Microsoft", return the address in the following format:
+  
+  Microsoft Corporation
+  One Microsoft Way
+  Redmond, WA 98052-6399
+  USA
+  
+  Here are 5 examples that clearly demonstrate the desired input and output format:
+  
+  Example 1:
+  
+  Input: "Apple Inc."
+  
+  Output:
+  
+  Apple Inc.
+  One Apple Park Way
+  Cupertino, CA 95014
+  USA
+  
+  Example 2:
+  
+  Input: "Amazon.com, Inc."
+  
+  Output:
+  
+  Amazon.com, Inc.
+  410 Terry Avenue North
+  Seattle, WA 98109-5210
+  USA
+  
+  Example 3:
+  
+  Input: "Alphabet Inc."
+  
+  Output:
+  
+  Alphabet Inc.
+  1600 Amphitheatre Parkway
+  Mountain View, CA 94043
+  USA
+  
+  Example 4:
+  
+  Input: "Meta Platforms, Inc."
+  
+  Output:
+  
+  Meta Platforms, Inc.
+  1 Hacker Way
+  Menlo Park, CA 94025
+  USA
+  
+  Example 5:
+  
+  Input: "The Coca-Cola Company"
+  
+  Output:
+  
+  The Coca-Cola Company
+  One Coca-Cola Plaza
+  Atlanta, GA 30313
+  USA
+  
+  The model should not provide any additional explanations, instructions, or code snippets. It should simply return the corporate headquarters address in the specified format.
+  
+  Input: "${group}"
+  
+  Output: `;
+  }
+
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { group } = req.body;
@@ -67,6 +139,33 @@ export default async function handler(req, res) {
 
       console.log('Generated domain:', domain); // Log the generated domain
 
+      // Generate corporate address using Anthropic Claude API
+        const addressPrompt = generateAddressPrompt(group);
+        const addressMessages = [
+        {
+            role: "user",
+            content: addressPrompt,
+        }
+        ];
+
+        const addressApiResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.CLAUDE_API_KEY,
+            'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({ model, max_tokens, messages: addressMessages })
+        });
+
+        if (!addressApiResponse.ok) {
+        const errorBody = await addressApiResponse.text();
+        throw new Error(`API responded with status: ${addressApiResponse.status} and body: ${errorBody}`);
+        }
+
+        const addressContent = await addressApiResponse.json();
+        const address = addressContent.content[0].text.trim();
+
       // Fetch the company logo using Clearbit API
       const clearbitResponse = await fetch(`https://logo.clearbit.com/${domain}`);
 
@@ -80,7 +179,7 @@ export default async function handler(req, res) {
       const logoBase64 = Buffer.from(logoBuffer).toString('base64');
       const logoDataUri = `data:${clearbitResponse.headers.get('content-type')};base64,${logoBase64}`;
 
-      res.status(200).json({ logoUrl: logoDataUri });
+      res.status(200).json({ logoUrl: logoDataUri, address });
     } catch (error) {
       console.error('Error searching for logo:', error);
       res.status(500).json({ error: 'Internal Server Error' });

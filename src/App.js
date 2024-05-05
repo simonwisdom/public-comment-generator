@@ -11,6 +11,7 @@ const App = () => {
   const [logoUrl, setLogoUrl] = useState('');
   const [logoSelected, setLogoSelected] = useState(false);
   const [officialLogoUrl, setOfficialLogoUrl] = useState('');
+  const [companyAddress, setCompanyAddress] = useState('');
 
   const handleDocumentNumberChange = (event) => {
     setDocumentNumber(event.target.value);
@@ -57,6 +58,21 @@ const App = () => {
       });
   };
 
+  To display the company address to the right of the logo, you'll need to update the handleSearchOfficialLogo function to handle the address data and update the JSX to conditionally render the address. Here's the modified code:
+jsx
+
+Copy code
+import React, { useState } from 'react';
+import './App.css';
+
+const App = () => {
+  // ...
+
+  const [officialLogoUrl, setOfficialLogoUrl] = useState('');
+  const [companyAddress, setCompanyAddress] = useState('');
+
+  // ...
+
   const handleSearchOfficialLogo = () => {
     setIsLoading(true);
     fetch('https://public-comment-generator-roan.vercel.app/api/search-clearbit-logo', {
@@ -72,6 +88,11 @@ const App = () => {
           setOfficialLogoUrl(data.logoUrl);
         } else {
           setOfficialLogoUrl('No matching logo found, you could try different wording');
+        }
+        if (data.address) {
+          setCompanyAddress(data.address);
+        } else {
+          setCompanyAddress('');
         }
         setIsLoading(false);
       })
@@ -161,16 +182,19 @@ const App = () => {
         <input className="input" type="text" value={group} onChange={handleGroupChange} />
       </label>
       <button className="button" onClick={handleSearchOfficialLogo} disabled={isLoading}>
-        {isLoading ? 'Searching...' : 'Search for official logo'}
+        {isLoading ? 'Searching...' : 'Search for official logo (optional)'}
       </button>
       {officialLogoUrl && (
-        <>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {officialLogoUrl.startsWith('data:') ? (
             <img src={officialLogoUrl} alt="Official Logo" />
           ) : (
             <p>{officialLogoUrl}</p>
           )}
-        </>
+          {companyAddress && (
+            <p style={{ marginLeft: '16px' }}>{companyAddress}</p>
+          )}
+        </div>
       )}
       <br />
       <label>
@@ -207,7 +231,7 @@ const App = () => {
           <p>Logo provided by <a href="https://clearbit.com" target="_blank" rel="noopener noreferrer">Clearbit.com</a></p>
         </footer>
       )}
-      
+
       {isLoading && (
         <div className="modal">
           <div className="modal-content">
