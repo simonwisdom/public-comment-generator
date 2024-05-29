@@ -8,6 +8,8 @@
 
 This application was developed during the Apart Research AI x Governance hackathon to demonstrate vulnerabilities in the public comment system on legislative documents from [federalregister.gov](http://www.federalregister.gov). It shows how easily one can generate authentic-looking public comments that could complicate the policymaking process by requiring verification.
 
+Our 3rd place submission is [here]([url](https://www.apartresearch.com/project/artificial-advocates-biasing-democratic-feedback-using-ai)).
+
 ## Purpose
 The project exposes how AI can manipulate democratic processes, particularly through the automation of public comments, highlighting the need for protective measures in democratic systems.
 
